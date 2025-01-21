@@ -4,7 +4,7 @@ clc
 
 % Dati trave
 beam = load('Data.mat');
-nf=beam.nf1_sc;
+nf=beam.nf1_sc; % no voltage on the piezo, so 
 csit=beam.csi1;
 
 % load('beam.mat')
@@ -19,99 +19,39 @@ csit=beam.csi1;
 
 
 nmodes=length(nf);
-omi=2*pi*nf;
+omi=2*pi*nf; % natural freq of the modes, no action of the piezo 
 
 k=[0.27 0.1 0.07 0.12];
-omoct=omi.*sqrt(1+k.^2);
+omoct=omi.*sqrt(1+k.^2); % natural freq open circuit
 
 L = 0.30;   % length [m]
 b = 0.015;  % width  [m]
 h = 0.002; % height [m]
 
-le = 0.005;
+le = 0.005; 
 ne = round(L/le);
 a=le/2* ones(1,2*ne);
 ltot=2*a*ne;
 
+% discretize the lenght of the beam
 x = (0:ltot(1)/ne:ltot(1)*(1-1/ne));
 [erre,ci]=size(beam.PHI);
 phi=zeros(60,6);
 
 for ii=1:ci
+    % discretize the magnitudo of mode shape PHI 
     phi(:,ii)=beam.PHI(:,ii)./max(abs(beam.PHI(:,ii)));
 end
 
-figure(1)
-plot(x/L,phi(:,1),'k-','linewidth',2)
-hold on
-plot(x/L,phi(:,2),'k--','linewidth',2)
-plot(x/L,phi(:,3),'k-.','linewidth',2)
-plot(x/L,phi(:,4),'k:','linewidth',2)
-plot(x/L,phi(:,5),'k-','linewidth',2)
-xlabel('x/L')
-ylabel('Modal Amplitude')
-legend('1st modeshape','2nd modeshape','3rd modeshape','4th modeshape','5th modeshape')
-grid
-
 % find the Frequency Respone Function (FRF)
-m=length(beam.PHI(:,1));
-f=m;
-omegav=2*pi*[0:0.01:nf(end)*1.3].';
-Hsc=zeros(length(omegav),1);
-Hoc=zeros(length(omegav),1);
-figure
-for ii=1:length(nf)
-    cs=csit(ii);
-    omz=nf(ii)*2*pi;
-    omoc=omoct(ii);
-    fi_m=beam.PHI(m,ii);
-    fi_f=beam.PHI(f,ii);
-    Hsci(:,ii)=fi_m*fi_f*((1./(-omegav.^2+2*1i*omz.*cs.*omegav+omz.^2)));
-    Hoci(:,ii)=fi_m*fi_f*((1./(-omegav.^2+2*1i*omz.*cs.*omegav+omoc.^2)));
-    Hsc=Hsci(:,ii)+Hsc;
-    Hoc=Hoci(:,ii)+Hoc;
-end
+m=length(beam.PHI(:,1)); % measuring point, in our case equal to focing point
+omegav=2*pi*[0:0.01:nf(end)*1.3].'; % system excitation frequency
 
-subplot(2,1,1)
-semilogy(omegav/2/pi,abs(Hsci))
-hold on
-semilogy(omegav/2/pi,abs(Hoci),'--')
-semilogy(omegav/2/pi,abs(Hsc),'linewidth',1)
-semilogy(omegav/2/pi,abs(Hoc),'--','linewidth',1)
-xlabel('Frequency [Hz]')
-ylabel('|H| [m/N]')
-grid on
-axis tight
-subplot(2,1,2)
-plot(omegav/2/pi,angle(Hsci))
-hold on
-plot(omegav/2/pi,angle(Hoci),'--')
-plot(omegav/2/pi,angle(Hsc),'linewidth',1)
-plot(omegav/2/pi,angle(Hoc),'--','linewidth',1)
-grid on
-axis tight
+[Hsci, Hsc] = ComputeFRF (beam.PHI(:,1:4), beam.nf1_sc, omegav, beam.csi1, m, m);
+[Hoci, Hoc] = ComputeFRF (beam.PHI(:,1:4), beam.nf1_oc, omegav, beam.csi1, m, m);
 
-
-% figure
-% tiledlayout(2,1)
-% ax1 = nexttile;
-% semilogy(omegav/2/pi,abs(Hsc))
-% hold on
-% semilogy(omegav/2/pi,abs(Hoc),'--')
-% xlabel('Frequency [Hz]')
-% ylabel('|H| [m/N]')
-% grid on
-% axis tight
-% legend('SC','OC')
-% ax2 = nexttile;
-% plot(omegav/2/pi,angle(Hsc))
-% hold on
-% plot(omegav/2/pi,angle(Hoc),'--')
-% grid on
-% axis tight
-% linkaxes([ax1 ax2],'x')
-% xlabel('Frequency [Hz]')
-% ylabel('\phi [rad]')
+% plot all the staff
+plotting
 
 % tuning R and LR
 c0=33.26*10^-9;
