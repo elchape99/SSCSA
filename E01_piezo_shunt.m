@@ -1,44 +1,44 @@
-clear all
+clear 
 close all
 clc
 
-
-% Dati trave
-beam_defm
-nf=beam.nf.sc_sc;
-%csit=beam.csi1;
 
 nmodes=3;
 
 w_i = 2*pi*beam.nf.sc_sc; % natural pulse of the system, no action of the piezo 
 
 % ki = sqr ((w_i_oc ^ 2 - w_i.^2)/w_i.^2)
-beam.k1 = sqrt ((beam.nf.oc_sc .^2 - beam.nf.sc_sc.^2) / beam.nf.sc_sc .^2);
-beam.k2 = sqrt ((beam.nf.sc_oc .^2 - beam.nf.sc_sc.^2) / beam.nf.sc_sc .^2);
+beam.k1 = sqrt ((beam.nf.oc_sc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
+beam.k2 = sqrt ((beam.nf.sc_oc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
 
 
 w_oc = w_i.*sqrt(1 + beam.k1.^2); % natural freq open circuit
-
-
-L = 0.30;   % length [m]
-b = 0.015;  % width  [m]
-h = 0.002; % height [m]
 
 le = 0.005; 
 ne = round(L/le);
 a=le/2* ones(1,2*ne);
 ltot=2*a*ne;
 
+% compuite Cp1 starting from Cp0
+beam.Cp1 = beam.Cp0 ./ (1 - beam.k1 .^2);
+
 % find tau optimal
 wf = sqrt (w_i.^2 .* (1 + beam.k1.^2 ./ 2));
 beam.tau1 = 1 ./ wf;
+beam.R1 = beam.tau1 ./ beam.Cp1; 
+
 
 x = linspace(1,500, 6000);
-data = load ("FRF_sc_sc.mat");
+FRF_sc_sc = load ("FRF_sc_sc.mat");
+FRF_oc_sc = load ("FRF_oc_sc.mat");
+FRF_sc_oc = load ("FRF_sc_oc.mat");
 % plot the total FRF without control (sc, oc, only pezo 1)
 figure
-semilogy (x, data.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl)
-
+semilogy (x, FRF_sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl);
+hold on
+semilogy(x, FRF_oc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl);
+title ("FRF sc-oc bottom piezo")
+grid on
 
 % 
 % 

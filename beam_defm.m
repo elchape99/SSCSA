@@ -5,6 +5,9 @@ clc
 clear
 close all
 
+beam.Cp0 = 8.3e-8;
+
+
 % config with sc_sc
 beam.nf.sc_sc(1) = 20.122; %[Hz]
 beam.nf.sc_sc(2) = 115.74; %[Hz]
@@ -14,7 +17,7 @@ beam.xi.sc_sc(1) = 0.010033;
 beam.xi.sc_sc(2) = 0.0047168;
 beam.xi.sc_sc(3) = 0.0028293;
 
-% config with oc_sc
+% config with oc_sc (piezo 1)
 beam.nf.oc_sc(1) = 20.723; %[Hz]
 beam.nf.oc_sc(2) = 115.94; %[Hz]
 beam.nf.oc_sc(3) = 314.81; %[Hz]
@@ -23,7 +26,7 @@ beam.xi.oc_sc(1) = 0.0086232;
 beam.xi.oc_sc(2) = 0.0053901;
 beam.xi.oc_sc(3) = 0.0040261;
 
-% config with sc_oc
+% config with sc_oc (piezo 2)
 beam.nf.sc_oc(1) = 20.23; %[Hz]
 beam.nf.sc_oc(2) = 117.7; %[Hz]
 beam.nf.sc_oc(3) = 314.32; %[Hz]
