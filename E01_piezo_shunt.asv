@@ -4,9 +4,9 @@ clc
 
 
 % Dati trave
-beam_defm
+beam_defm.m
 nf=beam.nf.sc_sc;
-%csit=beam.csi1;
+csit=beam.csi1;
 
 nmodes=3;
 
@@ -28,11 +28,6 @@ le = 0.005;
 ne = round(L/le);
 a=le/2* ones(1,2*ne);
 ltot=2*a*ne;
-
-wf = sqrt (w_i.^2 .* (1 + beam.k1.^2 ./ 2));
-beam.tau1 = 1 ./ wf;
-
-
 
 % discretize the lenght of the beam
 %x = (0:ltot(1)/ne:ltot(1)*(1-1/ne));
