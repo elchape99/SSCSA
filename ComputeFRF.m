@@ -1,5 +1,7 @@
 function [Hi, H] = ComputeFRF(phi, nf, omega, csi, m, f)
-% Function for comupute Frequency response function
+% Function for comupute Frequency response function in short and open
+% circuit
+%
 % Input:
 % - phi: mode shape matrix 
 % - nf: natural frequences of the system
@@ -9,7 +11,10 @@ function [Hi, H] = ComputeFRF(phi, nf, omega, csi, m, f)
 % - f = forcing point
 %
 % Output
+% - Hi: tranfer funciotn of i-th mode
 % - H: frequency response function asscotated at N mode
+%
+
 n_mode = size(phi, 2);
 
 % compute the natural frequences (hz -> rad/s)

@@ -4,7 +4,7 @@ clc
 
 % Dati trave
 beam = load('Data.mat');
-nf=beam.nf1_sc; % no voltage on the piezo, so 
+nf=beam.nf1_sc;
 csit=beam.csi1;
 
 % load('beam.mat')
@@ -19,7 +19,7 @@ csit=beam.csi1;
 
 
 nmodes=length(nf);
-omi=2*pi*nf; % natural freq of the modes, no action of the piezo 
+omi=2*pi*nf; % natural pulse of the modes, no action of the piezo 
 
 k=[0.27 0.1 0.07 0.12];
 omoct=omi.*sqrt(1+k.^2); % natural freq open circuit
@@ -45,7 +45,7 @@ end
 
 % find the Frequency Respone Function (FRF)
 m=length(beam.PHI(:,1)); % measuring point, in our case equal to focing point
-omegav=2*pi*[0:0.01:nf(end)*1.3].'; % system excitation frequency
+omegav=2*pi*[0:0.01:nf(end)*1.3].'; % system excitation frequency !!!
 
 [Hsci, Hsc] = ComputeFRF (beam.PHI(:,1:4), beam.nf1_sc, omegav, beam.csi1, m, m);
 [Hoci, Hoc] = ComputeFRF (beam.PHI(:,1:4), beam.nf1_oc, omegav, beam.csi1, m, m);
@@ -54,12 +54,12 @@ omegav=2*pi*[0:0.01:nf(end)*1.3].'; % system excitation frequency
 plotting
 
 % tuning R and LR
-c0=33.26*10^-9;
+c0 = 33.26*10^-9; % measured capacity !!!!!
+% equivalent capacitance related at each mode(cpi into slides)
 cpt=[c0/(1+k(1)^2) c0/(1+k(1)^2)/(1+k(2)^2) c0/(1+k(1)^2)/(1+k(2)^2)/(1+k(3)^2) c0/(1+k(1)^2)/(1+k(2)^2)/(1+k(3)^2)/(1+k(4)^2)];
 rt=zeros(nmodes,1);
 
-
-for jj=1:nmodes
+for jj = 1:nmodes
     Hr=zeros(length(omegav),1);
     Hlr=zeros(length(omegav),1);
     omf=sqrt((omoct(jj)^2+omi(jj)^2)/2);
@@ -80,8 +80,10 @@ for jj=1:nmodes
         omz=omi(ii);
         omoc=omoct(ii);
         fi_m=beam.PHI(m,ii);
-        fi_f=beam.PHI(f,ii);
-        Hri=fi_m*fi_f*((1+1i*omegav*tau)./(-omegav.^2.*(1+2*csi*omz*tau)+1i*omegav.*(2*csi.*omz+omoc.^2*tau-tau*omegav.^2)+omz^2));
+        fi_f=beam.PHI(m,ii);
+        % !!!! chiedere questa formul aalla prof perche è diversa dalla
+        % teoria , in georia non ce fi_m, fi_f
+        Hri=fi_m*fi_f*((1+1i*omegav*tau)./(-omegav.^2.*(1+2*csi*omz*tau)+1i*omegav.*(2*csi.*omz+omoc.^2*tau-tau*omegav.^2)+omz^2)); 
         Hrli=fi_m*fi_f*(-omegav.^2+ome^2+2*1i*xie*ome*omegav)./(omegav.^4-omegav.^2.*(ome^2+4*csi*xie*omz*ome+omoc^2)+omz^2*ome^2+1i*omegav.*(2*xie*ome*(omoc^2-omegav.^2)+2*csi*omz*(ome^2-omegav.^2)));
         Hr=Hri+Hr;
         Hlr=Hrli+Hlr;
