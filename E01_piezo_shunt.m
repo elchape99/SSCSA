@@ -25,15 +25,30 @@ FRF.sc_sc = load ("FRF_sc_sc.mat");
 FRF.oc_sc = load ("FRF_oc_sc.mat");
 FRF.sc_oc = load ("FRF_sc_oc.mat");
 FRF.R_sc = load("FRF_R_sc.mat");
+FRF.sc_sc_new = load ("FRF_sc_sc_new");
+FRF.sc_RL = load ("FRF_sc_RL");
 
 % x comumn for the plot
 x = linspace(1,500, length(FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl));
 
 % plot the total FRF, all processing for mode 1 (sc, oc, only pezo 1)
 figure
-semilogy (x, FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.8);
+semilogy (x, FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
 hold on
-semilogy(x, FRF.oc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.8);
+semilogy(x, FRF.oc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
+hold on
+title ("FRF upper piezo with R + L  Optimization")
+xlabel('Frequency [Hz]')
+ylabel('|H| [m/s*N]')
+grid on
+axis tight
+legend('sc-sc','oc-oc');
+
+% First piezo optimized with Resistance
+figure
+semilogy (x, FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
+hold on
+semilogy(x, FRF.oc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
 hold on
 semilogy(x, FRF.R_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.3);
 title ("FRF bottom piezo with Resistance Optimization")
@@ -41,6 +56,22 @@ xlabel('Frequency [Hz]')
 ylabel('|H| [m/s*N]')
 grid on
 axis tight
+legend('sc-sc','oc-oc', 'R-sc');
+
+% Second piezo optimized with R + L 
+figure
+semilogy (x, FRF.sc_sc_new.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
+hold on
+semilogy(x, FRF.sc_RL.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
+hold on
+title ("FRF upper piezo with R + L  Optimization")
+xlabel('Frequency [Hz]')
+ylabel('|H| [m/s*N]')
+grid on
+axis tight
+legend('sc-sc','sc-RL');
+
+
 
 
 
