@@ -14,12 +14,19 @@ beam.k1 = sqrt ((beam.nf.oc_sc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
 beam.k2 = sqrt ((beam.nf.sc_oc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
 
 % compuite Cp1 starting from Cp0
-beam.Cp1 = beam.Cp0 ./ (1 - beam.k1 .^2);
+beam.Cp1 = beam.Cp0 ./ (1 + beam.k1.^2);
+beam.Cp2 = beam.Cp0 ./ (1 + beam.k2.^2);
 
-% find tau optimal
+% find tau optimal, piezo 1, mode 1
 beam.wf1 = sqrt (w_i.^2 .* (1 + beam.k1.^2 ./ 2));
 beam.tau1 = 1 ./ beam.wf1;
 beam.R1 = beam.tau1 ./ beam.Cp1; 
+
+% find tau optimal, piezo 2, mode 2
+beam.wf2 = sqrt (w_i.^2 .* (1 + beam.k2.^2 ./ 2));
+beam.tau2 = 1 ./ beam.wf2;
+beam.R2 = beam.tau2 ./ beam.Cp2; 
+
 
 FRF.sc_sc = load ("FRF_sc_sc.mat");
 FRF.oc_sc = load ("FRF_oc_sc.mat");
