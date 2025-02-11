@@ -3,16 +3,16 @@ clear
 clc
 close all
 load Data.mat
-%%
+%
 % csi = [csi1; csi2; csi3];
 % nfi_oc = [nf1_oc; nf2_oc; nf3_oc];
 % nfi_sc = [nf1_sc; nf2_sc; nf3_sc];
 
-%%
 
-beam_defm.m
 
-%%
+beam_defm
+
+
 %sensing at x = L/6, foce at x = 5/6 L
 s_idx = round (length (PHI) / 6);
 f_idx = round (5/6 * length (PHI));

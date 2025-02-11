@@ -2,17 +2,18 @@
 % - first piezo is the one on the bottom
 % - second piezo id the one on the top
 clc
-clear
 close all
 
 beam.Cp0 = 8.3e-8;
 
 
 % config with sc_sc
+% da software
 beam.nf.sc_sc(1) = 20.122; %[Hz]
 beam.nf.sc_sc(2) = 115.74; %[Hz]
 beam.nf.sc_sc(3) = 314.24; %[Hz]
 
+% da software
 beam.xi.sc_sc(1) = 0.010033;
 beam.xi.sc_sc(2) = 0.0047168;
 beam.xi.sc_sc(3) = 0.0028293;
