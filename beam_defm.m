@@ -4,7 +4,7 @@
 clc
 close all
 
-beam.Cp0 = 8.3e-8;
+beam.Cp.Cp0 = 8.3e-8;
 
 
 % config with sc_sc
