@@ -4,7 +4,7 @@
 clc
 close all
 
-beam.Cp.Cp0 = 8.3e-8;
+
 
 
 % config with sc_sc
@@ -32,6 +32,23 @@ beam.nf.sc_oc(1) = 20.23; %[Hz]
 beam.nf.sc_oc(2) = 117.7; %[Hz]
 beam.nf.sc_oc(3) = 314.32; %[Hz]
 
+% config with oc_oc (both piezo)
+beam.nf.oc_oc(1) = 20.803; %[Hz]
+beam.nf.oc_oc(2) = 117.75; %[Hz]
+
 beam.xi.sc_oc(1) = 0.0094395;
 beam.xi.sc_oc(2) = 0.0038633;
 beam.xi.sc_oc(3) = 0.0038445;
+
+beam.k.k1 = sqrt ((beam.nf.oc_sc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
+beam.k.k2 = sqrt ((beam.nf.sc_oc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
+
+
+beam.Cp.C10 = 8.3e-8;
+beam.Cp.C11 = beam.Cp.C10 ./ (1 + beam.k.k1(1).^2);
+beam.Cp.C12 = beam.Cp.C11 ./ (1 + beam.k.k2(1).^2);
+
+beam.Cp.C22 = 7.46e-8;
+beam.Cp.C21 = beam.Cp.C22 .* (1 + beam.k.k2(2).^2);
+% beam.Cp.C12 = beam.Cp.C11 ./ (1 + beam.k.k2.^2);
+

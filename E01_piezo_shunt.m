@@ -14,19 +14,19 @@ beam.k.k1 = sqrt ((beam.nf.oc_sc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
 beam.k.k2 = sqrt ((beam.nf.sc_oc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
 
 % compuite Cp1 starting from Cp0
-beam.Cp.Cp1 = beam.Cp.Cp0 ./ (1 + beam.k.k1.^2);
-beam.Cp.Cp2 = beam.Cp.Cp0 ./ (1 + beam.k.k2.^2);
+% beam.Cp.Cp1 = beam.Cp.C10 ./ (1 + beam.k.k1.^2);
+% beam.Cp.Cp2 = beam.Cp.Cp1 ./ (1 + beam.k.k2.^2);
 
 % find tau optimal, piezo 1, mode 1
 
 beam.wf.wf1 = sqrt (w_i.^2 .* (1 + beam.k.k1.^2 ./ 2));
 beam.tau.tau1 = 1 ./ beam.wf.wf1;
-beam.R.R1 = beam.tau.tau1 ./ beam.Cp.Cp1; 
+beam.R.R1 = beam.tau.tau1 ./ beam.Cp.C11; 
 
 % find tau optimal, piezo 2, mode 2
 beam.wf.wf2 = sqrt (w_i.^2 .* (1 + beam.k.k2.^2 ./ 2));
 beam.tau.tau2 = 1 ./ beam.wf.wf2;
-beam.R.R2 = beam.tau.tau2 ./ beam.Cp.Cp2; 
+beam.R.R2 = beam.tau.tau2 ./ beam.Cp.C12; 
 
 
 FRF.sc_sc = load ("FRF_sc_sc.mat");
@@ -45,26 +45,26 @@ semilogy (x, FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
 hold on
 semilogy(x, FRF.oc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
 hold on
-title ("FRF upper piezo with R + L  Optimization")
+title ("FRF-sc-sc - FRF-oc-sc")
 xlabel('Frequency [Hz]')
 ylabel('|H| [m/s*N]')
 grid on
 axis tight
-legend('sc-sc','oc-oc');
+legend('sc-sc','oc-sc');
 
 % First piezo optimized with Resistance
 figure
-semilogy (x, FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
+semilogy (x, FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.3);
 hold on
-semilogy(x, FRF.oc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
+semilogy(x, FRF.oc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.3);
 hold on
-semilogy(x, FRF.R_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.3);
+semilogy(x, FRF.R_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",1, "Color","g");
 title ("FRF bottom piezo with Resistance Optimization")
 xlabel('Frequency [Hz]')
 ylabel('|H| [m/s*N]')
 grid on
 axis tight
-legend('sc-sc','oc-oc', 'R-sc');
+legend('sc-sc','oc-sc', 'R-sc');
 
 % Second piezo optimized with R + L 
 figure
