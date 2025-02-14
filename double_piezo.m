@@ -86,3 +86,22 @@ figure(1)
 % legend("H-rl-rl", "H-sc-sc")
 semilogy(w, abs(H_rl_rl), w, abs(sum(H_sc_sc,2)));
 legend("H-rl-rl-1", "H-rl-rl-2", "H-sc-sc")
+
+FRF_rl_rl_double_piezo_first = load ("FRF_rl_rl_double_piezo_first");
+FRF.sc_sc = load ("FRF_sc_sc.mat");
+
+% x comumn for the plot
+x = linspace(1,500, length(FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl));
+
+% plot the total FRF, all processing for mode 1 (sc, oc, only pezo 1)
+figure
+semilogy (x, FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
+hold on
+semilogy(x, FRF_rl_rl_double_piezo_first.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl, "LineWidth",0.6);
+hold on
+title ("FRF-sc-sc - FRF-oc-sc")
+xlabel('Frequency [Hz]')
+ylabel('|H| [m/s*N]')
+grid on
+axis tight
+legend('sc-sc','oc-sc');
