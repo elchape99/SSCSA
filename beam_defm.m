@@ -46,7 +46,7 @@ beam.k.k2 = sqrt ((beam.nf.sc_oc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
 
 beam.Cp.C10 = 8.3e-8;
 beam.Cp.C11 = beam.Cp.C10 ./ (1 + beam.k.k1(1).^2);
-beam.Cp.C12 = beam.Cp.C11 ./ (1 + beam.k.k2(1).^2);
+%beam.Cp.C12 = beam.Cp.C11 ./ (1 + beam.k.k2(1).^2);
 
 beam.Cp.C22 = 7.46e-8;
 beam.Cp.C21 = beam.Cp.C22 .* (1 + beam.k.k2(2).^2);
