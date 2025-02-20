@@ -55,83 +55,26 @@ csi_e_2_opt = sqrt(3)/2 * sqrt ((w_cap(2)^2 - w_i(2)^2) / (w_cap(2)^2 + w_i(2)^2
 % computed with w_e_1 is a frequecy not a period
 L1_opt = 1 ./ (w_e_1_opt^2 * (beam.Cp.C11));
 L2_opt = 1 ./ (w_e_2_opt^2 * (beam.Cp.C22));
-L1_opt = L1_opt/(2*pi)^2;
-L2_opt = L2_opt/(2*pi)^2;
+L1_opt/(2*pi)^2 = L1_opt/(2*pi)^2;
 
 
 % R1_opt_1 = 2 * csi_e_1_opt * sqrt (L1_opt / beam.Cp.C11);
 % R2_opt_1 = 2 * csi_e_2_opt * sqrt (L2_opt / beam.Cp.C22);
 R1_opt = (2 * csi_e_1_opt) / (beam.Cp.C11 * w_e_1_opt);
 R2_opt = (2 * csi_e_2_opt) / (beam.Cp.C22 * w_e_2_opt);
-R1_opt = R1_opt * 2*pi;
-R2_opt = R2_opt * 2*pi;
+
 
 % analitic H_sc_sc
 H_sc_sc = 1./(w_i.^2 + 1i.*2.*csi_i .*w_i.*w - w.^2);
-% experimental measure of velocity force : moltiplication of all H(w)
+% experimental measure of velocity7force : moltiplication of all H(w)
 % analitic by jw
 H_sc_sc = 1i * w .* H_sc_sc;
 
 % analitic H_rl_rl
-H_rl_rl = double_piezo_reson_FRF (w, w_i, w_cap, csi_i, [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], L1_opt, L2_opt, R1_opt, R2_opt, beam.k.k1(1:2), beam.k.k2(1:2));      
+H_rl_rl = double_piezo_reson_FRF (w, w_i, w_cap, csi_i, [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], L1_opt/(2*pi)^2, L2_opt/(2*pi)^2, R1_opt * 2*pi, R2_opt * 2*pi, beam.k.k1(1:2), beam.k.k2(1:2));      
 % experimental measure of velocity7force : moltiplication of all H(w)
 % analitic by jw
 H_rl_rl = 1i * w .* H_rl_rl;
-
-%% Curve fitting
-
-% === Funzione modello della FRF ===
-H_model = @(phi_squared, x) abs(phi_squared(1) .* H_sc_sc(:,1) + ...
-                                phi_squared(2) .* H_sc_sc(:,2));
-
-% === Curve fitting sulla magnitudo della FRF ===
-phi_init = [0.1, 0.1]; % Stima iniziale dei pesi modali
-phi_opt = lsqcurvefit(H_model, phi_init, double(freq), double(abs(FRF_sc_sc)));
-
-H_sc_sc_fitted = abs(phi_opt(1) * H_sc_sc(:,1) + ...
-                     phi_opt(2) * H_sc_sc(:,2));
-
-% === Risultati ===
-disp('Mode shapes relativi nel punto di misura:');
-disp(sqrt(phi_opt));
-
-% === Plot del risultato ===
-figure;
-subplot(2, 1, 1);
-plot(freq, FRF_sc_sc, 'r--', 'DisplayName', 'FRF sperimentale'); 
-hold on;
-plot(freq, H_model(phi_opt, freq), 'b-', 'LineWidth', 2, 'DisplayName', 'FRF fittata');
-xlabel('Frequenza (Hz)'); ylabel('|H(ω)|');
-legend('FRF-sc-sc', 'H_model');
-grid on;
-title('Curve fitting della FRF');
-
-subplot(2, 1, 2);
-semilogy (freq, (FRF_sc_sc), "LineWidth",0.6);
-hold on
-semilogy(freq, (H_sc_sc_fitted));
-%semilogy(w, abs(sum(H_sc_sc,2)));
-title ("H-sc-sc-fitted - FRF-sc-sc", 'H-sc-sc')
-xlabel('Frequency [Hz]')
-ylabel('|H| [m/s*N]')
-grid on
-axis tight
-legend('FRF-sc-sc','H-sc-sc-fitted');
-
-H_rl_rl_fitted = abs(phi_opt(1) * H_rl_rl(:,1) + ...
-                     phi_opt(2) * H_rl_rl(:,2));
-
-figure;
-semilogy (freq, (FRF_rl_rl), "LineWidth",0.6);
-hold on
-semilogy(freq, (H_rl_rl_fitted));
-semilogy(freq, abs(sum(H_rl_rl,2)));
-title ("FRF-rl-rl", 'H-rl-rl-fitted')
-xlabel('Frequency [Hz]')
-ylabel('|H| [m/s*N]')
-grid on
-axis tight
-legend('FRF-rl-rl','H-rl-rl-fitted');
 
 % plotting the H (analitic frequecies respone function)
 figure;
@@ -184,11 +127,64 @@ FRF.sc_sc_norm = FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl ./ magnitudo_p_m(1
 
 
 
+%% Curve fitting
 
+% === Funzione modello della FRF ===
+H_model = @(phi_squared, x) abs(phi_squared(1) .* H_sc_sc(:,1) + ...
+                                phi_squared(2) .* H_sc_sc(:,2));
+
+% === Curve fitting sulla magnitudo della FRF ===
+phi_init = [0.1, 0.1]; % Stima iniziale dei pesi modali
+phi_opt = lsqcurvefit(H_model, phi_init, double(freq), double(abs(FRF_sc_sc)));
+
+H_sc_sc_fitted = abs(phi_opt(1) * H_sc_sc(:,1) + ...
+                     phi_opt(2) * H_sc_sc(:,2));
+
+% === Risultati ===
+disp('Mode shapes relativi nel punto di misura:');
+disp(sqrt(phi_opt));
+
+% === Plot del risultato ===
+figure;
+subplot(2, 1, 1);
+plot(freq, FRF_sc_sc, 'r--', 'DisplayName', 'FRF sperimentale'); 
+hold on;
+plot(freq, H_model(phi_opt, freq), 'b-', 'LineWidth', 2, 'DisplayName', 'FRF fittata');
+xlabel('Frequenza (Hz)'); ylabel('|H(ω)|');
+legend('FRF-sc-sc', 'H_model');
+grid on;
+title('Curve fitting della FRF');
+
+subplot(2, 1, 2);
+semilogy (freq, (FRF_sc_sc), "LineWidth",0.6);
+hold on
+semilogy(freq, (H_sc_sc_fitted));
+%semilogy(w, abs(sum(H_sc_sc,2)));
+title ("H-sc-sc-fitted - FRF-sc-sc", 'H-sc-sc')
+xlabel('Frequency [Hz]')
+ylabel('|H| [m/s*N]')
+grid on
+axis tight
+legend('FRF-sc-sc','H-sc-sc-fitted');
+
+H_rl_rl_fitted = abs(phi_opt(1) * H_rl_rl(:,1) + ...
+                     phi_opt(2) * H_rl_rl(:,2));
+
+figure;
+semilogy (freq, (FRF_rl_rl), "LineWidth",0.6);
+hold on
+semilogy(freq, (H_rl_rl_fitted));
+%semilogy(w, abs(sum(H_sc_sc,2)));
+title ("FRF-rl-rl", 'H-rl-rl-fitted')
+xlabel('Frequency [Hz]')
+ylabel('|H| [m/s*N]')
+grid on
+axis tight
+legend('FRF-rl-rl','H-rl-rl-fitted');
 
 %%
-% 
-% 
+
+
 % 
 % 
 % 
@@ -282,4 +278,4 @@ FRF.sc_sc_norm = FRF.sc_sc.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl ./ magnitudo_p_m(1
 % axis tight
 % legend('FRF-w-1','FRF-w-2','H-sc-sc-1', 'H-sc-sc-2');
 % 
-% 
+
