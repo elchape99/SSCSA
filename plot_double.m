@@ -98,12 +98,19 @@ legend('FRF', 'First 4 peaks');
 subplot(2, 1, 2)
 semilogy(freq, (abs(1i .* w .* best_FRF_values)));
 hold on
-semilogy(freq, H_sc_sc_fitted)
-semilogy(freq, H_rl_rl_damped)
+semilogy(freq, abs(H_sc_sc_fitted))
+semilogy(freq, abs(H_rl_rl_damped))
+semilogy (freq, abs(H_rl_rl_damped_opt))
 xlabel('Frequency (Hz)');
 ylabel('|H| [m/(s*N)]');
 axis tight
 grid on;
 title('FRF optimal in logaritmic scale with optimal values');
-legend('H-rl-rl L opt', 'H-sc-sc-fitted', 'H-rl-rl-damped');
+legend('H-rl-rl L opt', 'H-sc-sc-fitted', 'H-rl-rl-damped', 'H-rl-rl-opt-damped');
 
+figure
+semilogy(freq, abs(H_sc_sc_fitted))
+hold on
+semilogy (freq, abs(H_rl_rl_damped_opt))
+grid on
+legend ('H-sc-sc', 'H-rl-rl-optimal')

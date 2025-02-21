@@ -162,6 +162,7 @@ best_param2 = NaN;
 min_error = Inf;
 
 % Loop sui due parametri
+%parfor?
 for ii = (w_e_1_opt - tot):(w_e_1_opt + tot)
     for jj = (w_e_2_opt - tot) : (w_e_2_opt + tot)
         % Calcolo dei parametri L e R
@@ -215,16 +216,18 @@ L1_opt_new = 1 ./ (best_param1^2 * (beam.Cp.C11));
 L2_opt_new = 1 ./ (best_param2^2 * (beam.Cp.C22));
 
 
-%% R optimization
+%% damped with previous optimal resistances h_rl_rl computation
 H_rl_rl_damped = double_piezo_reson_FRF (w, w_i, w_cap, csi_i, ...
                                         [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], ...
                                         L1_opt_new, L2_opt_new, R1_opt, R2_opt, ...
                                         beam.k.k1(1:2), beam.k.k2(1:2), phi_opt);     
 H_rl_rl_damped = sum(1i .* w .* H_rl_rl_damped, 2);
 
+%% R optimization
 tot = 0.1; 
+min_error = inf;
 
-
+%parfor?
 for ii = (csi_e_1_opt - tot): 0.01 : (csi_e_1_opt + tot)
     for jj = (csi_e_2_opt - tot) : 0.01 : (csi_e_2_opt + tot)
 
@@ -266,3 +269,13 @@ for ii = (csi_e_1_opt - tot): 0.01 : (csi_e_1_opt + tot)
         end
     end
 end
+%% damped h_rl_rl with optimal resistances computation
+
+R1_opt_new = 2 * best_param1 * sqrt (L1_opt_new / beam.Cp.C11);
+R2_opt_new = 2 * best_param2 * sqrt (L2_opt_new / beam.Cp.C22);
+
+H_rl_rl_damped_opt = double_piezo_reson_FRF (w, w_i, w_cap, csi_i, ...
+                                        [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], ...
+                                        L1_opt_new, L2_opt_new, R1_opt_new, R2_opt_new, ...
+                                        beam.k.k1(1:2), beam.k.k2(1:2), phi_opt);     
+H_rl_rl_damped_opt = sum(1i .* w .* H_rl_rl_damped_opt, 2);
