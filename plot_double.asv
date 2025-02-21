@@ -1,0 +1,81 @@
+%% Script for plot all the graph needed for double piezo 
+close all
+
+
+%% === Plot the fitted response ===
+figure(1);
+subplot(2, 1, 1);
+plot(freq, FRF_sc_sc, 'r--', 'DisplayName', 'FRF measured'); 
+hold on;
+plot(freq, H_sc_sc_fitted, 'b-', 'LineWidth', 2, 'DisplayName', 'H fitted');
+xlabel('Frequency (Hz)'); 
+ylabel('|H(ω)|');
+title('Curve fitting of FRF and H');
+legend('FRF-sc-sc', 'H-sc-sc-fitted');
+grid on;
+
+subplot(2, 1, 2);
+semilogy (freq, (FRF_sc_sc));
+hold on
+semilogy(freq, (H_sc_sc_fitted));
+xlabel('Frequency [Hz]')
+ylabel('|H| [m/(s*N)]')
+grid on
+axis tight
+title ("Result of fitting")
+legend('FRF-sc-sc','H-sc-sc-fitted');
+
+%% Plot the three finded FRF/H_rl_rl without optimization
+figure(2);
+semilogy (freq, (FRF_rl_rl), "LineWidth",0.6);
+hold on
+semilogy(freq, abs(sum(H_rl_rl,2)));
+semilogy(freq, abs(sum(H_rl_rl_fitted,2)));
+legend ('FRF-rl-rl', 'H-rl-rl', 'H-rl-rl-fitted');
+xlabel('Frequency [Hz]')
+ylabel('|H| [m/(s*N)]')
+grid on
+axis tight
+title('Comparison with all FRF/H-rl-rl without optimization');
+
+%% plotting the H (analitic frequecies respone function)
+figure(3);
+subplot(3,1,1)
+semilogy(freq, abs(sum(H_sc_sc, 2)))
+hold on
+semilogy(freq, abs(sum(H_rl_rl,2)));
+legend("H-sc-sc", "H-rl-rl")
+title('analitic plot of H-sc-sc and H-rl-rl')
+%semilogy(w, abs(H_rl_rl), w, abs(sum(H_sc_sc,2)));
+%legend("H-rl-rl", "H-rl-rl-2", "H-sc-sc")
+xlabel('Frequency [Hz]')
+ylabel('|H| [m/(s*N)]')
+grid on;
+axis tight
+
+
+% plot the total FRF, all processing for mode 1
+subplot(3,1,2)
+semilogy (freq, H_sc_sc_fitted, "LineWidth",0.6);
+hold on
+semilogy(freq, H_rl_rl_fitted, "LineWidth",0.6);
+title ("all measured value FRF-sc-sc - FRF-rl-rl")
+legend('FRF-sc-sc','FRF-rl-rl');
+xlabel('Frequency [Hz]')
+ylabel('|H| [m/(s*N)]')
+grid on
+axis tight
+
+subplot(3, 1, 3)
+semilogy (freq, H_sc_sc_fitted, "LineWidth",0.6);
+hold on
+semilogy(freq, H_rl_rl_fitted, "LineWidth",0.6);
+semilogy(freq, abs(sum(H_sc_sc, 2)))
+semilogy(freq, abs(sum(H_rl_rl, 2)))
+title ("all measured value FRF-sc-sc - FRF-rl-rl")
+legend('FRF-sc-sc','FRF-rl-rl');
+xlabel('Frequency [Hz]')
+ylabel('|H| [m/(s*N)]')
+grid on
+axis tight
+

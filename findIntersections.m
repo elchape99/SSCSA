@@ -1,11 +1,11 @@
-function x_intersections = findIntersections(f, g, x_range, num_points)
+function x_intersections = findIntersections(f, g, x_vals)
     % Trova le intersezioni tra due funzioni f(x) e g(x) in un intervallo dato
     % f, g: function handles delle due funzioni
     % x_range: [x_min, x_max] intervallo di ricerca
     % num_points: numero di punti per la ricerca iniziale
 
     % Generazione di punti iniziali per la ricerca delle radici
-    x_vals = linspace(x_range(1), x_range(2), num_points);
+    %x_vals = linspace(x_range(1), x_range(2), num_points);
     y_vals = f(x_vals) - g(x_vals);
     
     % Trova gli intervalli in cui cambia segno (possibili intersezioni)

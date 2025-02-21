@@ -11,7 +11,7 @@ beam.nf.sc_sc(2) = 115.74; %[Hz]
 beam.nf.sc_sc(3) = 314.24; %[Hz]
 
 % sc_sc_double_piezo
-beam.nf.sc_sc_doible_piezo(1) = 20.092; %[Hz]
+beam.nf.sc_sc_double_piezo(1) = 20.092; %[Hz]
 beam.nf.sc_sc_double_piezo(2) = 115.6; %[Hz]
 
 
