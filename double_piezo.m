@@ -34,7 +34,7 @@ k2= k(2);
 % freq used for the plot
 freq = linspace(1,500, length(FRF_sc_sc)); 
 
-% trasform x in pulse
+% trasform freq in pulse
 w = freq' * 2 * pi;
 
 % w_i = beam.nf.sc_sc(1:2); % w_sc_sc
@@ -42,7 +42,7 @@ w = freq' * 2 * pi;
 % w_cap = beam.nf.oc_oc(1:2); % w_oc_oc
 w_i = 2*pi* beam.nf.sc_sc(1:2); % w_sc_sc
 
-w_i = [21.1297*2*pi, 116.538 * 2*pi];
+w_i = [21.1297*2*pi, 116.538 * 2*pi]; % trovate in matlab
 w_cap = 2*pi* beam.nf.oc_oc(1:2); % w_oc_oc
 
 %optimal values if consider two modes uncorrelated 
@@ -52,9 +52,11 @@ w_e_2_opt = (w_cap(2));
 csi_e_1_opt = sqrt(3)/2 * sqrt ((w_cap(1)^2 - w_i(1)^2) / (w_cap(1)^2 + w_i(1)^2));
 csi_e_2_opt = sqrt(3)/2 * sqrt ((w_cap(2)^2 - w_i(2)^2) / (w_cap(2)^2 + w_i(2)^2));
 
-% computed with w_e_1 is a frequecy not a period
+% computed with w_e_1 is a pulse not a period
 L1_opt = 1 ./ (w_e_1_opt^2 * (beam.Cp.C11));
 L2_opt = 1 ./ (w_e_2_opt^2 * (beam.Cp.C22));
+
+% L in freq
 L1_opt = L1_opt/(2*pi)^2;
 L2_opt = L2_opt/(2*pi)^2;
 
@@ -63,6 +65,8 @@ L2_opt = L2_opt/(2*pi)^2;
 % R2_opt_1 = 2 * csi_e_2_opt * sqrt (L2_opt / beam.Cp.C22);
 R1_opt = (2 * csi_e_1_opt) / (beam.Cp.C11 * w_e_1_opt);
 R2_opt = (2 * csi_e_2_opt) / (beam.Cp.C22 * w_e_2_opt);
+
+% R in freq
 R1_opt = R1_opt * 2*pi;
 R2_opt = R2_opt * 2*pi;
 

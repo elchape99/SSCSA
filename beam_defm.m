@@ -10,13 +10,15 @@ beam.nf.sc_sc(1) = 20.122; %[Hz]
 beam.nf.sc_sc(2) = 115.74; %[Hz]
 beam.nf.sc_sc(3) = 314.24; %[Hz]
 
+% sc_sc_double_piezo
+beam.nf.sc_sc_doible_piezo(1) = 20.092; %[Hz]
+beam.nf.sc_sc_double_piezo(2) = 115.6; %[Hz]
+
+
 % da software
 beam.xi.sc_sc(1) = 0.010033;
 beam.xi.sc_sc(2) = 0.0047168;
 beam.xi.sc_sc(3) = 0.0028293;
-% beam.xi.sc_sc(1) = 0;
-% beam.xi.sc_sc(2) = 0;
-% beam.xi.sc_sc(3) = 0;
 
 % config with oc_sc (piezo 1)
 beam.nf.oc_sc(1) = 20.723; %[Hz]
@@ -42,7 +44,6 @@ beam.xi.sc_oc(3) = 0.0038445;
 
 beam.k.k1 = sqrt ((beam.nf.oc_sc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
 beam.k.k2 = sqrt ((beam.nf.sc_oc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
-
 
 beam.Cp.C10 = 8.3e-8;
 beam.Cp.C11 = beam.Cp.C10 ./ (1 + beam.k.k1(1).^2);
