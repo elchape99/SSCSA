@@ -123,29 +123,7 @@ H_rl_rl_fitted = abs(sum(1i .* w .* H_rl_rl_fitted,2));
 % tot = 5;
 % csi_i_optimization = zeros(1,2);
 % 
-% for ii = (w_e_1_opt - tot) : 0.1 : (w_e_1_opt + tot)
-%     for jj = (w_e_2_opt - tot) : 0.1 : (w_e_2_opt + tot)
-%         % computed with w_e_1 is a pulse not a period
-%         Lii = 1 ./ (ii^2 * (beam.Cp.C11));
-%         Ljj = 1 ./ (jj^2 * (beam.Cp.C22));
-% 
-%         Rii = 0; %(2 * csi_e_1_opt) / (beam.Cp.C11 * ii);
-%         Rjj = 0; %(2 * csi_e_2_opt) / (beam.Cp.C22 * jj);
-% 
-%         func_sc_sc = @(w) abs(sum(1 ./(w_i.^2 - w.^2)));
-%         func_rl_rl = @(w) abs(sum(double_piezo_reson_FRF (w, w_i, w_cap, csi_i_optimization, [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], Lii, Ljj, Rii, Rjj, beam.k.k1(1:2), beam.k.k2(1:2))));
-%         x_intersection = findIntersections(func_sc_sc, func_rl_rl, w);
-%         if (length(x_intersection) < 4)
-%             continue;
-%         end
-%         y_inter = func_sc_sc(x_intersection(1:2));
-%         if abs(y_inter(1) - Y_inter(2)) < 10
-%             disp('two peaks equal');
-%             disp(x_intersection/(2*pi));
-%             break;
-%         end
-%     end
-% end
+
 
 %% H_rl_rl, L optimization 
 % In this section we otpimize the H_rl_rl
@@ -153,7 +131,7 @@ H_rl_rl_fitted = abs(sum(1i .* w .* H_rl_rl_fitted,2));
 % shape inside
 
 % Variabili per memorizzare il miglior risultato
-tot = 10;  % Intervallo di ricerca
+tot = 2;  % Intervallo di ricerca
 counter = 1;
 csi_i_optimization = zeros(1,2); % for optimization put mechanical damping == 0
 
@@ -162,28 +140,68 @@ best_param2 = NaN;
 min_error = Inf;
 
 % Loop sui due parametri
-for ii = (w_e_1_opt - tot):(w_e_1_opt + tot)
-    for jj = (w_e_2_opt - tot) : (w_e_2_opt + tot)
+% ug
+% for ii = (w_e_1_opt - tot) : 0.01 : (w_e_1_opt + tot)
+%     for jj = (w_e_2_opt - tot) : 0.01 : (w_e_2_opt + tot)
+%         % computed with w_e_1 is a pulse not a period
+%         Lii = 1 ./ (ii^2 * (beam.Cp.C11));
+%         Ljj = 1 ./ (jj^2 * (beam.Cp.C22));
+% 
+%         % Rii = 0; %(2 * csi_e_1_opt) / (beam.Cp.C11 * ii);
+%         % Rjj = 0; %(2 * csi_e_2_opt) / (beam.Cp.C22 * jj);
+%         Rii = R1_opt; 
+%         Rjj = R2_opt;
+% 
+%         func_sc_sc = @(w) abs(sum(1 ./(w_i.^2 - w.^2), 2));
+%         func_rl_rl = @(w) abs(sum(double_piezo_reson_FRF (w, w_i, w_cap, csi_i_optimization, [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], Lii, Ljj, Rii, Rjj, beam.k.k1(1:2), beam.k.k2(1:2), phi_opt), 2));
+%         x_intersection = findIntersections(func_sc_sc, func_rl_rl, w);
+%         if (length(x_intersection) < 6)
+%             continue;
+%         end
+%         locs = x_intersection([1, 2, 5, 6]); %points 3 and 4 are in anti-resonance
+%         pks = arrayfun (func_sc_sc, locs);
+%         total_error = abs(pks(1) - pks(2)) + abs(pks(3) - pks(4));
+% 
+% 
+%         if total_error < min_error
+%             min_error = total_error;
+%             best_param1 = ii;
+%             best_param2 = jj;
+%             % best_FRF_values = FRF_values;  % Salva la funzione ottimale
+%             best_FRF_values = arrayfun (func_rl_rl, w);  % Salva la funzione ottimale
+%             best_locs = locs(1:4);
+%             best_pks = pks(1:4);
+%             % hystory(:,counter) = FRF_values;
+%             % counter = counter +1;
+%         end
+%     end
+% end
+
+for ii = (w_e_1_opt - tot) : 0.1 : (w_e_1_opt + tot)
+    for jj = (w_e_2_opt - tot) : 0.1 : (w_e_2_opt + tot)
+% for ii = (w_e_1_opt - tot) : (w_e_1_opt + tot)
+%     for jj = (w_e_2_opt - tot) : (w_e_2_opt + tot)
         % Calcolo dei parametri L e R
         Lii = 1 ./ (ii^2 * (beam.Cp.C11));
         Ljj = 1 ./ (jj^2 * (beam.Cp.C22));
-          
-        Rii = 0; 
-        Rjj = 0; 
-        
+
+        Rii = R1_opt; 
+        Rjj = R2_opt; 
+
         % Valutazione della funzione su tutto il range di frequenze
         FRF_values = arrayfun(@(w) abs(sum(double_piezo_reson_FRF(w, w_i, w_cap, csi_i_optimization, ...
                               [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], ...
                               Lii, Ljj, Rii, Rjj, beam.k.k1(1:2), beam.k.k2(1:2), phi_opt))), w);
 
         % Trova i primi 4 picchi
-        [pks, locs] = findpeaks(FRF_values, w, 'SortStr', 'descend');
-        
+        % [pks, locs] = findpeaks(FRF_values, w, 'SortStr', 'descend');
+        [pks, locs] = findpeaks(FRF_values, w);
+
         % Controlla se ci sono almeno 4 picchi
         if length(pks) < 4
             continue;
         end
-        
+
         % Seleziona i primi 4 picchi
         pks = pks(1:4);
 
@@ -215,28 +233,37 @@ L1_opt_new = 1 ./ (best_param1^2 * (beam.Cp.C11));
 L2_opt_new = 1 ./ (best_param2^2 * (beam.Cp.C22));
 
 
-%% R optimization
+%% damped with previous optimal resistances h_rl_rl computation
 H_rl_rl_damped = double_piezo_reson_FRF (w, w_i, w_cap, csi_i, ...
                                         [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], ...
                                         L1_opt_new, L2_opt_new, R1_opt, R2_opt, ...
                                         beam.k.k1(1:2), beam.k.k2(1:2), phi_opt);     
 H_rl_rl_damped = sum(1i .* w .* H_rl_rl_damped, 2);
 
+%% R optimization
 tot = 0.1; 
-for ii = (csi_e_1_opt - tot): 0.01 : (csi_e_1_opt + tot)
-    for jj = (csi_e_2_opt - tot) : 0.01 : (csi_e_2_opt + tot)
+tot2 = 0.05;
+min_error = inf;
+csi1_cand = (csi_e_1_opt - tot): 0.1 : (csi_e_1_opt + tot);
+csi2_cand = (csi_e_2_opt - tot) : 0.1 : (csi_e_2_opt + tot);
 
-        Rii = 2 * csi_e_1_opt * sqrt (L1_opt_new / beam.Cp.C11); 
-        Rjj = 2 * csi_e_1_opt * sqrt (L1_opt / beam.Cp.C11);
+
+for ii = unique(max(zeros(1, length(csi1_cand)), csi1_cand))
+    for jj = unique (max(zeros(1, length(csi2_cand)), csi2_cand))
+% for ii = 0:0.1:(sqrt(3)/3)
+%     for jj = 0:0.1:(sqrt(3)/3)
+
+        Rii = 2 * ii * sqrt (L1_opt_new / beam.Cp.C11); 
+        Rjj = 2 * jj * sqrt (L2_opt_new / beam.Cp.C22);
         
         % Valutazione della funzione su tutto il range di frequenze
-        FRF_values = arrayfun(@(w) abs(sum(double_piezo_reson_FRF(w, w_i, w_cap, csi_i_optimization, ...
+        FRF_values_damped = arrayfun(@(w) abs(sum(double_piezo_reson_FRF(w, w_i, w_cap, csi_i_optimization, ...
                               [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], ...
-                              L1_opt_new, L_opt_new, Rii, Rjj, ...
+                              L1_opt_new, L2_opt_new, Rii, Rjj, ...
                               beam.k.k1(1:2), beam.k.k2(1:2), phi_opt))), w);
 
         % Trova i primi 4 picchi
-        [pks, locs] = findpeaks(FRF_values, w, 'SortStr', 'descend');
+        [pks, locs] = findpeaks(FRF_values_damped, w);
         
         % Controlla se ci sono almeno 4 picchi
         if length(pks) < 4
@@ -247,8 +274,8 @@ for ii = (csi_e_1_opt - tot): 0.01 : (csi_e_1_opt + tot)
         pks = pks(1:4);
 
         % Calcola l'errore (differenza tra i primi due e tra il terzo e quarto)
-        error1 = abs(pks(1) - pks(2));  % Differenza tra picco 1 e 2
-        error2 = abs(pks(3) - pks(4));  % Differenza tra picco 3 e 4
+        error1 = abs(pks(1) + pks(2));  % Differenza tra picco 1 e 2
+        error2 = abs(pks(3) + pks(4));  % Differenza tra picco 3 e 4
         total_error = error1 + error2;  % Errore totale da minimizzare
 
         % Aggiorna i migliori parametri se l'errore è minore
@@ -256,11 +283,21 @@ for ii = (csi_e_1_opt - tot): 0.01 : (csi_e_1_opt + tot)
             min_error = total_error;
             best_param1 = ii;
             best_param2 = jj;
-            best_FRF_values = FRF_values;  % Salva la funzione ottimale
+            best_FRF_value_damped = FRF_values_damped;  % Salva la funzione ottimale
             best_locs = locs(1:4);
             best_pks = pks(1:4);
-            hystory(:,counter) = FRF_values;
-            counter = counter +1;
+            % hystory(:,counter) = FRF_values;
+            % counter = counter +1;
         end
     end
 end
+%% damped h_rl_rl with optimal resistances computation
+
+R1_opt_new = 2 * best_param1 * sqrt (L1_opt_new / beam.Cp.C11);
+R2_opt_new = 2 * best_param2 * sqrt (L2_opt_new / beam.Cp.C22);
+
+H_rl_rl_damped_opt = double_piezo_reson_FRF (w, w_i, w_cap, csi_i, ...
+                                        [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], ...
+                                        L1_opt_new, L2_opt_new, R1_opt_new, R2_opt_new, ...
+                                        beam.k.k1(1:2), beam.k.k2(1:2), phi_opt);     
+H_rl_rl_damped_opt = sum(1i .* w .* H_rl_rl_damped_opt, 2);

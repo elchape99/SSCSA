@@ -98,6 +98,7 @@ legend('FRF', 'First 4 peaks');
 subplot(2, 1, 2)
 semilogy(freq, (abs(1i .* w .* best_FRF_values)));
 hold on
+xline (best_locs / (2 * pi))
 semilogy(freq, abs(H_sc_sc_fitted))
 semilogy(freq, abs(H_rl_rl_damped))
 semilogy (freq, abs(H_rl_rl_damped_opt))
@@ -114,3 +115,16 @@ hold on
 semilogy (freq, abs(H_rl_rl_damped_opt))
 grid on
 legend ('H-sc-sc', 'H-rl-rl-optimal')
+
+figure
+H_sc_sc_unnatdamp = phi_opt .* 1i .* w ./ (w_i.^2 - w.^2);
+H_rl_rl_unnatdamp = double_piezo_reson_FRF(w, w_i, w_cap, csi_i_optimization, ...
+                              [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], ...
+                              L1_opt_new, L2_opt_new, R1_opt_new, R2_opt_new, beam.k.k1(1:2), beam.k.k2(1:2), phi_opt);
+H_rl_rl_unnatdamp = phi_opt .* 1i .* w .* H_rl_rl_unnatdamp;
+
+semilogy(freq, abs((H_rl_rl_fitted)))
+hold on
+semilogy (freq, abs(sum(H_rl_rl_damped_opt, 2)))
+grid on
+legend ('H-rl-rl', 'H-rl-rl-optimal')
