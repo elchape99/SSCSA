@@ -1,3 +1,5 @@
+close all
+addpath("Functions\");
 
 % plot of the modes
 figure(1)

@@ -2,6 +2,7 @@
 clear
 clc
 close all
+addpath("Functions\");
 load Data.mat
 %
 % csi = [csi1; csi2; csi3];

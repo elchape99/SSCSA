@@ -1,6 +1,8 @@
 clear 
 close all
 clc
+addpath("Functions\");
+
 %% RESISTIVE CIRCUIT
 % load beam data
 beam_defm

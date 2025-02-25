@@ -1,6 +1,8 @@
 clc
 close all
 clear 
+addpath("Functions\");
+
 %% Script developed for use two piezo
 % name convenction:
 % - H: analitic function, computed with formulas

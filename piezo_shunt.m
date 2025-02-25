@@ -1,6 +1,8 @@
-clear all
 close all
+clear 
 clc
+addpath("Functions\");
+
 
 % Dati trave
 

@@ -2,6 +2,7 @@
 close all
 % values from double_piezo.m script
 % Run this scropt after runned double_piezo.m script
+addpath("Functions\");
 
 %% === Plot the fitted response ===
 figure(1);
