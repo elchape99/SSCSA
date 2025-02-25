@@ -1,0 +1,38 @@
+# MATLAB backup files
+*.asv
+
+# Simulink cache and auto-generated code
+slprj/
+data/
+simulink_autosave/
+*.slxc
+*.slx.autosave
+
+# MATLAB figures and GUI layout files
+*.fig
+*.mlapp
+*.mlappinstall
+
+# Code generation and build artifacts
+codegen/
+*.mexw32
+*.mexw64
+*.mexmaci64
+*.buildinfo
+*.log
+*.mk
+*.tlc
+
+# Live scripts backup files
+*.mlx~
+
+# Workspace files
+*.mldatx
+
+# MATLAB preferences and history files
+*.matlab/workspace.mat
+*.matlab/History.xml
+
+# Temporary files
+*_autosave
+*~
