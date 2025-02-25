@@ -37,7 +37,8 @@ k1= k(1);
 k2= k(2);
 
 % freq used for the plot
-freq = linspace(0,500, length(FRF_sc_sc)); 
+% freq = linspace(1,500, length(FRF_sc_sc)); %error
+freq = linspace(0, 500, length(FRF_sc_sc)); 
 
 % trasform freq in pulse
 w = freq' * 2 * pi;
@@ -153,6 +154,8 @@ min_error = Inf;
 %         % Rjj = 0; %(2 * csi_e_2_opt) / (beam.Cp.C22 * jj);
 %         Rii = R1_opt; 
 %         Rjj = R2_opt;
+%         Rii = 0; 
+%         Rjj = 0;
 % 
 %         func_sc_sc = @(w) abs(sum(1 ./(w_i.^2 - w.^2), 2));
 %         func_rl_rl = @(w) abs(sum(double_piezo_reson_FRF (w, w_i, w_cap, csi_i_optimization, [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], Lii, Ljj, Rii, Rjj, beam.k.k1(1:2), beam.k.k2(1:2), phi_opt), 2));
@@ -188,8 +191,10 @@ for ii = (w_e_1_opt - tot) : 0.1 : (w_e_1_opt + tot)
         Lii = 1 ./ (ii^2 * (beam.Cp.C11));
         Ljj = 1 ./ (jj^2 * (beam.Cp.C22));
 
-        Rii = R1_opt; 
-        Rjj = R2_opt; 
+        Rii = 0; 
+        Rjj = 0; 
+        % Rii = R1_opt; 
+        % Rjj = R2_opt;
 
         % Valutazione della funzione su tutto il range di frequenze
         FRF_values = arrayfun(@(w) abs(sum(double_piezo_reson_FRF(w, w_i, w_cap, csi_i_optimization, ...
@@ -243,16 +248,26 @@ H_rl_rl_damped = double_piezo_reson_FRF (w, w_i, w_cap, csi_i, ...
                                         beam.k.k1(1:2), beam.k.k2(1:2), phi_opt);     
 H_rl_rl_damped = sum(1i .* w .* H_rl_rl_damped, 2);
 
+H_rl_rl_undamped = double_piezo_reson_FRF (w, w_i, w_cap, csi_i, ...
+                                        [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], ...
+                                        L1_opt_new, L2_opt_new, 0, 0, ...
+                                        beam.k.k1(1:2), beam.k.k2(1:2), phi_opt);     
+H_rl_rl_undamped = sum(1i .* w .* H_rl_rl_undamped, 2);
+
 %% R optimization
 tot = 0.1; 
 tot2 = 0.05;
 min_error = inf;
-csi1_cand = (csi_e_1_opt - tot): 0.1 : (csi_e_1_opt + tot);
-csi2_cand = (csi_e_2_opt - tot) : 0.1 : (csi_e_2_opt + tot);
+csi1_cand = (csi_e_1_opt - tot): 0.01 : (csi_e_1_opt + tot);
+csi2_cand = (csi_e_2_opt - tot2) : 0.0005 : (csi_e_2_opt + tot2);
+
+csi1_cand = unique(max(zeros(1, length(csi1_cand)), csi1_cand));
+csi2_cand = unique (max(zeros(1, length(csi2_cand)), csi2_cand));
 
 
-for ii = unique(max(zeros(1, length(csi1_cand)), csi1_cand))
-    for jj = unique (max(zeros(1, length(csi2_cand)), csi2_cand))
+% for ii = csi1_cand
+for ii = csi_e_1_opt
+    for jj = csi2_cand
 % for ii = 0:0.1:(sqrt(3)/3)
 %     for jj = 0:0.1:(sqrt(3)/3)
 
@@ -277,8 +292,11 @@ for ii = unique(max(zeros(1, length(csi1_cand)), csi1_cand))
         pks = pks(1:4);
 
         % Calcola l'errore (differenza tra i primi due e tra il terzo e quarto)
-        error1 = abs(pks(1) + pks(2));  % Differenza tra picco 1 e 2
-        error2 = abs(pks(3) + pks(4));  % Differenza tra picco 3 e 4
+        % error1 = abs(pks(1) + pks(2));  % Differenza tra picco 1 e 2
+        % error2 = abs(pks(3) + pks(4));  % Differenza tra picco 3 e 4
+        % total_error = error1 + error2;  % Errore totale da minimizzare
+        error1 = max(pks(1), pks(2));  %
+        error2 = max(pks(3), pks(4));  %
         total_error = error1 + error2;  % Errore totale da minimizzare
 
         % Aggiorna i migliori parametri se l'errore è minore

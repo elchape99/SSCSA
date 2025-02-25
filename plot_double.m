@@ -4,7 +4,7 @@ close all
 % Run this scropt after runned double_piezo.m script
 addpath("Functions\");
 
-%% Plot the fitted response
+%% === Plot the fitted response ===
 figure(1);
 subplot(2, 1, 1);
 plot(freq, FRF_sc_sc, 'r--'); 
@@ -122,10 +122,13 @@ H_sc_sc_unnatdamp = phi_opt .* 1i .* w ./ (w_i.^2 - w.^2);
 H_rl_rl_unnatdamp = double_piezo_reson_FRF(w, w_i, w_cap, csi_i_optimization, ...
                               [beam.Cp.C11, beam.Cp.C12], [beam.Cp.C21, beam.Cp.C22], ...
                               L1_opt_new, L2_opt_new, R1_opt_new, R2_opt_new, beam.k.k1(1:2), beam.k.k2(1:2), phi_opt);
-H_rl_rl_unnatdamp = phi_opt .* 1i .* w .* H_rl_rl_unnatdamp;
+H_rl_rl_unnatdamp = 1i .* w .* H_rl_rl_unnatdamp;
 
-semilogy(freq, abs((H_rl_rl_fitted)))
+semilogy(freq, abs(sum(H_sc_sc_fitted, 2)))
 hold on
-semilogy (freq, abs(sum(H_rl_rl_damped_opt, 2)))
+semilogy (freq, abs(sum(H_rl_rl_unnatdamp, 2)))
+semilogy (freq, abs(H_rl_rl_undamped))
 grid on
 legend ('H-rl-rl', 'H-rl-rl-optimal')
+
+%% plotting for slides
