@@ -37,7 +37,7 @@ k1= k(1);
 k2= k(2);
 
 % freq used for the plot
-freq = linspace(1,500, length(FRF_sc_sc)); 
+freq = linspace(0,500, length(FRF_sc_sc)); 
 
 % trasform freq in pulse
 w = freq' * 2 * pi;

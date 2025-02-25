@@ -4,7 +4,7 @@ close all
 % Run this scropt after runned double_piezo.m script
 addpath("Functions\");
 
-%% === Plot the fitted response ===
+%% Plot the fitted response
 figure(1);
 subplot(2, 1, 1);
 plot(freq, FRF_sc_sc, 'r--'); 
