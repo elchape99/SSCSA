@@ -30,11 +30,11 @@ FRF_rl_rl = FRF_rl_rl_double_piezo_first.Data1_MT_FRF_H1_2Zplus_1Zplus_Ampl;
 csi_i = beam.xi.sc_sc(1:2); % natural damping of the system
 % with different damping change the peak, but the intersection point with
 % the short circuit response does not change
-csi1 = 0.005;  
-csi2 = 0.005;  
-k = [0.24, 0.18];
-k1= k(1);
-k2= k(2);
+% csi1 = 0.005;  
+% csi2 = 0.005;  
+% k = [0.24, 0.18];
+% k1= k(1);
+% k2= k(2);
 
 % freq used for the plot
 % freq = linspace(1,500, length(FRF_sc_sc)); %error
@@ -256,17 +256,17 @@ H_rl_rl_undamped = sum(1i .* w .* H_rl_rl_undamped, 2);
 
 %% R optimization
 tot = 0.1; 
-tot2 = 0.05;
+tot2 = 0.01;
 min_error = inf;
-csi1_cand = (csi_e_1_opt - tot): 0.01 : (csi_e_1_opt + tot);
-csi2_cand = (csi_e_2_opt - tot2) : 0.0005 : (csi_e_2_opt + tot2);
+csi1_cand = (csi_e_1_opt - tot): 0.1 : (csi_e_1_opt + tot);
+csi2_cand = (csi_e_2_opt - tot2) : 0.1 : (csi_e_2_opt + tot2);
 
 csi1_cand = unique(max(zeros(1, length(csi1_cand)), csi1_cand));
 csi2_cand = unique (max(zeros(1, length(csi2_cand)), csi2_cand));
 
 
-% for ii = csi1_cand
-for ii = csi_e_1_opt
+for ii = csi1_cand
+% for ii = csi_e_1_opt
     for jj = csi2_cand
 % for ii = 0:0.1:(sqrt(3)/3)
 %     for jj = 0:0.1:(sqrt(3)/3)
