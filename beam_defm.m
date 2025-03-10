@@ -48,11 +48,11 @@ beam.xi.sc_oc(1) = 0.0094395;
 beam.xi.sc_oc(2) = 0.0038633;
 beam.xi.sc_oc(3) = 0.0038445;
 
-% beam.k.k1 = sqrt ((beam.nf.oc_sc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
-% beam.k.k2 = sqrt ((beam.nf.sc_oc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
+beam.k.k1 = sqrt ((beam.nf.oc_sc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
+beam.k.k2 = sqrt ((beam.nf.sc_oc .^2 - beam.nf.sc_sc.^2) ./ beam.nf.sc_sc .^2);
 
-beam.k.k1 = sqrt ((beam.nf.oc_sc_fin .^2 - beam.nf.sc_sc_fin.^2) ./ beam.nf.sc_sc_fin .^2);
-beam.k.k2 = sqrt ((beam.nf.sc_oc_fin .^2 - beam.nf.sc_sc_fin.^2) ./ beam.nf.sc_sc_fin .^2);
+% beam.k.k1 = sqrt ((beam.nf.oc_sc_fin .^2 - beam.nf.sc_sc_fin.^2) ./ beam.nf.sc_sc_fin .^2);
+% beam.k.k2 = sqrt ((beam.nf.sc_oc_fin .^2 - beam.nf.sc_sc_fin.^2) ./ beam.nf.sc_sc_fin .^2);
 
 
 beam.Cp.C10 = 8.3e-8;
